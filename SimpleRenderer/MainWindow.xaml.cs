@@ -24,5 +24,16 @@ namespace SPEANITool
         {
             InitializeComponent();
         }
+
+        public void drawPixel(int x, int y, byte[] rgb)
+        {
+            Rectangle rect = new Rectangle();
+            Grid.SetColumn(rect, x);
+            Grid.SetRow(rect, y);
+            rect.Fill = new SolidColorBrush(Color.FromRgb(rgb[0], rgb[1], rgb[2]));
+            RenderGrid.Children.Add(rect);
+        }
+
+   
     }
 }
