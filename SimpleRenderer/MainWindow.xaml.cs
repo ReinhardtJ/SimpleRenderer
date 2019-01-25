@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SPEANITool
+namespace SimpleRenderer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
