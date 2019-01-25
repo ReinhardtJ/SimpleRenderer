@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace SimpleRenderer
 {
@@ -20,19 +22,19 @@ namespace SimpleRenderer
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Renderer renderer;
+
+        private delegate Task doStuff();
+
         public MainWindow()
         {
             InitializeComponent();
+            this.renderer = new Renderer(this.RenderGrid);
+
+            RenderGrid.Dispatcher.BeginInvoke(DispatcherPriority.Background, new doStuff(renderer.doStuff));
+            //this.renderer.doStuff();
         }
 
-        public void drawPixel(int x, int y, byte[] rgb)
-        {
-            Rectangle rect = new Rectangle();
-            Grid.SetColumn(rect, x);
-            Grid.SetRow(rect, y);
-            rect.Fill = new SolidColorBrush(Color.FromRgb(rgb[0], rgb[1], rgb[2]));
-            RenderGrid.Children.Add(rect);
-        }
 
    
     }
