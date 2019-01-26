@@ -21,7 +21,9 @@ namespace SimpleRenderer
             this.grid = grid;
             syncContext = SynchronizationContext.Current;
 
-            drawLineMPS(0.4f, 0.3f, 43.5f, 16.21f);
+            //drawLineMPS(0.4f, 0.3f, 43.5f, 16.21f);
+            drawLineMPS(0.4f, 0.3f, 43.5f, -16.21f);
+
         }
 
         public void drawCoordinateAxes(byte[] color)
@@ -80,33 +82,95 @@ namespace SimpleRenderer
             int YA = (int)Math.Round(ya);
             int YE = (int)Math.Round(ye);
 
-            int deltaX = XE - XA;
-            int deltaY = YE - YA;
+            int deltaX = Math.Abs(XE - XA);
+            int deltaY = Math.Abs(YE - YA);
+
+            // assign a float division to m, or NaN if we have a vertical line
+            float m = deltaX != 0 ? (float)(XE - XA) / (float)(YE - YA) : float.NaN;
 
             int delta = deltaY * 2 - deltaX;
             int incrEast = deltaY * 2;
             int incrNorthEast = (deltaY - deltaX) * 2;
+            int incrSouthEast = (deltaY - deltaX) * 2;
+            int incrNorth = deltaX * 2;
+            int incrSoutch = deltaX * 2;
 
             int x = XA;
             int y = YA;
             drawPixel(x, y, color);
 
-            while (x < XE)
+            // go only east
+            if (deltaY == 0)
             {
-                if (delta <= 0)
+                while (x < XE)
                 {
-                    delta += incrEast;
                     x++;
+                    drawPixel(x, y, color);
                 }
-                else
-                {
-                    delta += incrNorthEast;
-                    x++;
-                    y++;
-                }
-                drawPixel(x, y, color);
-                await Task.Delay(10);
+
             }
+            else if (deltaX == 0) // go only north
+            {
+                while (y < YE)
+                {
+                    y++;
+                    drawPixel(x, y, color);
+                }
+            }
+            else if (m == 1) // go only north east
+            {
+
+            }
+            else if (m == -1) // go only south east
+            {
+
+            }
+            else if (m > 1) // go north and north east
+            {
+            }
+            else if (m < -1) // go south and south east
+            {
+            }
+            else if (m > 0) // go east and north east (given procedure)
+            {
+                while (x < XE)
+                {
+                    if (delta <= 0)
+                    {
+                        delta += incrEast;
+                        x++;
+                    }
+                    else
+                    {
+                        delta += incrNorthEast;
+                        x++;
+                        y++;
+                    }
+                    drawPixel(x, y, color);
+                    await Task.Delay(10);
+                }
+            }
+            else if (m < 0) // go east and south east
+            {
+                while (x < XE)
+                {
+                    System.Diagnostics.Debug.WriteLine("i am inside the south east loop");
+                    if (delta <= 0)
+                    {
+                        delta += incrEast;
+                        x++;
+                    }
+                    else
+                    {
+                        delta += incrSouthEast;
+                        x++;
+                        y--;
+                    }
+                    drawPixel(x, y, color);
+                    await Task.Delay(10);
+                }
+            }
+            
         }
     }
 }
