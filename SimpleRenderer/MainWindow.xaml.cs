@@ -30,12 +30,12 @@ namespace SimpleRenderer
         {
             InitializeComponent();
             this.renderer = new Renderer(this.RenderGrid);
+            this.renderer.drawCoordinateAxes(new byte[] { 0x4D, 0x08, 0x24 });
 
-            RenderGrid.Dispatcher.BeginInvoke(DispatcherPriority.Background, new doStuff(renderer.doStuff));
             //this.renderer.doStuff();
         }
 
 
-   
+
     }
 }
